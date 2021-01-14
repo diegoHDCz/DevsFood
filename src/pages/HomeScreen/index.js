@@ -4,20 +4,34 @@ import ReactTooltip from 'react-tooltip';
 import { 
     Container, 
     CategoryArea, 
-    CategoryList  
+    CategoryList,
+    ProductArea,
+    ProductList  
 } from './styled';
 
 import api from '../../api'
 
 import Header from '../../components/Header'
 import CategoryItem from '../../components/CategoryItem'
+import ProductItem from '../../components/ProductItem'
+
 
 export default () => {
     const history = useHistory();
     const [headerSearch, setHeaderSearch] = useState('')
     const [categories,setCategories] = useState([]);
+    const [products, setProducts] = useState([]);
 
     const [activeCategory, setActiveCategory] = useState(0);
+
+
+    const getProducts = async function () {
+        const prods = await api.getProducts();
+        if(prods.error === ''){
+            setProducts(prods.result.data);
+        }
+    }
+
 
     useEffect(()=>{
         const getCategories = async ()=>{
@@ -32,7 +46,7 @@ export default () => {
     },[])
 
     useEffect(()=>{
-
+        getProducts();
     },[activeCategory])
     
     return (
@@ -63,7 +77,19 @@ export default () => {
                         ))}
                     </CategoryList>
                 </CategoryArea>
-                
+            }
+            {products.length > 0 &&
+            <ProductArea>
+                <ProductList>
+                    {products.map((item,index)=>(
+                        <ProductItem
+                        key={index}
+                        data={item}
+                        />
+                    ))
+                    }
+                </ProductList>
+            </ProductArea>
             }
         </Container>
     );
