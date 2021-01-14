@@ -21,4 +21,5 @@ display:flex;
 background-color: #009b0d ;
 background-image: url('/assets/bg.png');
 flex:1;
+overflow-y:auto;
 `;
