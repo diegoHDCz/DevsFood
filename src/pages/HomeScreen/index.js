@@ -17,6 +17,7 @@ import Header from '../../components/Header'
 import CategoryItem from '../../components/CategoryItem'
 import ProductItem from '../../components/ProductItem'
 
+let searchTimer = null;
 
 export default () => {
     const history = useHistory();
@@ -24,13 +25,14 @@ export default () => {
     const [categories, setCategories] = useState([]);
     const [products, setProducts] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
-    const [activePage, setActivePage] = useState(0);
+    const [activePage, setActivePage] = useState(1);
+    const [activeSearch, setActiveSearch] = useState(0);
 
-    const [activeCategory, setActiveCategory] = useState(0);
+    const [activeCategory, setActiveCategory] = useState('');
 
 
     const getProducts = async function () {
-        const prods = await api.getProducts();
+        const prods = await api.getProducts(activeCategory, activePage, activeSearch );
         if (prods.error === '') {
             setProducts(prods.result.data);
             setTotalPages(prods.result.pages);
@@ -38,6 +40,13 @@ export default () => {
         }
     }
 
+    useEffect(() => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => {
+            setActiveSearch(headerSearch);
+        }, 2000)
+
+    }, [headerSearch]);
 
     useEffect(() => {
         const getCategories = async () => {
@@ -55,7 +64,7 @@ export default () => {
         setProducts([]);
         getProducts();
 
-    }, [activeCategory, activePage])
+    }, [activeCategory, activePage, activeSearch])
 
     return (
         <Container>
