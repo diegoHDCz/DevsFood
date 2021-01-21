@@ -18,7 +18,7 @@ export default {
         if(page > 0){
             fields.page = page;
         };
-        if(search != ''){
+        if(search !== ''){
             fields.search = search;
         };
 

@@ -16,23 +16,28 @@ import api from '../../api'
 import Header from '../../components/Header'
 import CategoryItem from '../../components/CategoryItem'
 import ProductItem from '../../components/ProductItem'
+import Modal from '../../components/Modal';
+import ModalProduct from '../../components/ModalProduct';
+
 
 let searchTimer = null;
 
 export default () => {
     const history = useHistory();
+    const [modalStatus, SetModalStatus] = useState(false);
     const [headerSearch, setHeaderSearch] = useState('')
     const [categories, setCategories] = useState([]);
     const [products, setProducts] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
     const [activePage, setActivePage] = useState(1);
     const [activeSearch, setActiveSearch] = useState(0);
+    const [modalData, setModalData] = useState({})
 
     const [activeCategory, setActiveCategory] = useState('');
 
 
     const getProducts = async function () {
-        const prods = await api.getProducts(activeCategory, activePage, activeSearch );
+        const prods = await api.getProducts(activeCategory, activePage, activeSearch);
         if (prods.error === '') {
             setProducts(prods.result.data);
             setTotalPages(prods.result.pages);
@@ -65,6 +70,11 @@ export default () => {
         getProducts();
 
     }, [activeCategory, activePage, activeSearch])
+
+    const handleProductClick = (data) => {
+        setModalData(data);
+        SetModalStatus(true);
+    }
 
     return (
         <Container>
@@ -102,6 +112,7 @@ export default () => {
                             <ProductItem
                                 key={index}
                                 data={item}
+                                onClick={handleProductClick}
                             />
                         ))
                         }
@@ -122,6 +133,12 @@ export default () => {
                     ))}
                 </ProdcutPagiantionArea>
             }
+            <Modal status={modalStatus} setStatus={SetModalStatus}>
+                <ModalProduct
+                    data={modalData}
+                    setStatus={SetModalStatus}
+                />
+            </Modal>
         </Container>
     );
 }
