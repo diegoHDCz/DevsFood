@@ -9,7 +9,7 @@ const initialState = {
 export default (state = initialState, action) => {
     let products = [...state.products]
    switch(action.type){
-       case 'ADD_PRODCUT': 
+       case 'ADD_PRODUCT': 
        
         let id = action.payload.data.id
 
@@ -25,7 +25,7 @@ export default (state = initialState, action) => {
 
         return {...state, products}
     break;
-    case 'CHANGE_PRODCUT':    
+    case 'CHANGE_PROCDUT':    
         
         if(products[action.payload.key]){
         switch(action.payload.type){
